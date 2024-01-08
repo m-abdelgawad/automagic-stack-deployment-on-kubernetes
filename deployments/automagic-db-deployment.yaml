@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automagic-db-deployment
+  namespace: automagic-developer
+  labels:
+    name: automagic-db-deployment
+    environment: production
+    service-type: database
+    app: automagic-developer
+spec:
+  replicas: 1
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 1
+  selector:
+    matchLabels:
+      name: automagic-db-pod
+      environment: production
+      service-type: database
+      app: automagic-developer
+  template:
+    metadata:
+      name: automagic-db-pod
+      namespace: automagic-developer
+      labels:
+        name: automagic-db-pod
+        environment: production
+        service-type: database
+        app: automagic-developer
+      annotations:
+        imageregistry: "https://hub.docker.com/"
+    spec:
+      securityContext:
+          runAsUser: 999
+      imagePullSecrets:
+        - name: dockerhub-secret
+      restartPolicy: Always
+      containers:
+        - name: db
+          image: mabdelgawad94/automagic_developer:db-ec1d00c
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          resources:
+            requests:
+              memory: "10M"
+              cpu: 0.01
+            limits:
+              memory: "2G"
+              cpu: 2
+          env:
+            - name: IS_PRODUCTION
+              value: "True"
+            - name: DEBUG
+              value: "False"
+          envFrom:
+            - configMapRef:
+                name: automagic-cm
+            - secretRef:
+                name: automagic-secrets
+          securityContext:
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/
+              name: automagic-db-data-pvc
+      volumes:
+        - name: automagic-db-data-pvc
+          persistentVolumeClaim:
+            claimName: automagic-db-data-pvc

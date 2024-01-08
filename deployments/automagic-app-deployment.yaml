@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automagic-app-deployment
+  namespace: automagic-developer
+  labels:
+    name: automagic-app-deployment
+    environment: production
+    service-type: application
+    app: automagic-developer
+spec:
+  replicas: 2
+  strategy:  
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 1
+  selector:
+    matchLabels:
+      name: automagic-app-pod
+      environment: production
+      service-type: application
+      app: automagic-developer
+  template:
+    metadata:
+      name: automagic-app-pod
+      namespace: automagic-developer
+      labels:
+        name: automagic-app-pod
+        environment: production
+        service-type: application
+        app: automagic-developer
+      annotations:
+        imageregistry: "https://hub.docker.com/"
+    spec:
+      securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+          fsGroup: 1000
+      imagePullSecrets:
+        - name: dockerhub-secret
+      restartPolicy: Always
+      containers:
+        - name: app
+          image: mabdelgawad94/automagic_developer:app-f00335e
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 20
+          resources:
+            requests:
+              memory: "10M"
+              cpu: 0.01
+            limits:
+              memory: "2G"
+              cpu: 2
+          env:
+            - name: IS_PRODUCTION
+              value: "True"
+            - name: DEBUG
+              value: "False"
+          envFrom:
+            - configMapRef:
+                name: automagic-cm
+            - secretRef:
+                name: automagic-secrets
+            - secretRef:
+                name: google-analytics-sa-secret
+          volumeMounts:
+            - mountPath: /website/media/
+              name: automagic-app-media-pvc
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+      - name: automagic-app-media-pvc
+        persistentVolumeClaim:
+          claimName: automagic-app-media-pvc

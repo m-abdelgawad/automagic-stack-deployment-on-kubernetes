@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: automagic-nginx-service
+  namespace: automagic-developer
+  labels:
+    name: automagic-nginx-deployment
+    environment: production
+    app: automagic-developer
+    service-type: frontend
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    name: automagic-nginx-pod
+    environment: production
+    app: automagic-developer
+    service-type: frontend

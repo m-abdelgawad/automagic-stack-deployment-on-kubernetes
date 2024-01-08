@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: automagic-db-service
+  namespace: automagic-developer
+  labels:
+    name: automagic-db-service
+    app: automagic-developer
+    environment: production
+    service-type: database
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    name: automagic-db-pod
+    app: automagic-developer
+    environment: production
+    service-type: database
+  type: ClusterIP

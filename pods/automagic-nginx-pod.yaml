@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: automagic-nginx-pod
+  namespace: automagic-developer
+  labels:
+    name: automagic-nginx-pod
+    environment: production
+    service-type: frontend
+    app: automagic-developer
+  annotations:
+    imageregistry: "https://hub.docker.com/"
+spec:
+  securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+  imagePullSecrets:
+    - name: dockerhub-secret
+  restartPolicy: Always
+  containers:
+    - name: nginx
+      image: mabdelgawad94/automagic_developer:automagic-nginx-server
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+      volumeMounts:
+        - mountPath: /website/media/
+          name: automagic-app-media-pvc
+      readinessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        failureThreshold: 20
+      livenessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        failureThreshold: 20
+      resources:
+        requests:
+          memory: "10M"
+          cpu: 0.01
+        limits:
+          memory: "2G"
+          cpu: 2
+      securityContext:
+        allowPrivilegeEscalation: false
+      volumeMounts:
+        - mountPath: /website/media/
+          name: automagic-app-media-pvc
+  volumes:
+  - name: automagic-app-media-pvc
+    persistentVolumeClaim:
+      claimName: automagic-app-media-pvc
