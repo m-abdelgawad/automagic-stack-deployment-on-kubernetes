@@ -8,7 +8,7 @@
 <br />
 <div align="center">
   <img src="readme_files/logo.png" alt="Logo" width="120">
-  <h3 align="center">Portfolio Stack Deployment on Kubernetes</h3>
+  <h3 align="center">Automagic Stack Deployment on Kubernetes</h3>
 </div>
 
 
@@ -29,16 +29,16 @@
 
 <img src="readme_files/cover.jpg" alt="Cover Image">
 
-* Project Name: Nginx Proxy Server for Kubernetes
+* Project Name: Automagic Stack Deployment on Kubernetes
 * Version: v1.0.0
 * Organization Department: Technology
 
 
 ## Description
-In this project, I created many Kuberentes resources; to deploy my Portfolio web application stack that consits of:
+In this project, I created many Kubernetes resources; to deploy my Portfolio web application stack that consists of:
 
-* Web Application developed with Django Framework in Python for the backend, and HTML/CSS/JS/Bootstrap for the frontend.
-* Postgres Databased.
+* Web Application developed with Django Framework in Python for the backend, and HTML/CSS/JS/Bootstrap for the front end.
+* Postgres Database.
 * Cronjob system monitor that enters system stats into the Postgres Database.
 
 <img src="readme_files/1.jpg">
