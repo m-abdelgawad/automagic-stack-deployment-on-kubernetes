@@ -62,11 +62,8 @@ spec:
             failureThreshold: 20
           resources:
             requests:
-              memory: "10M"
-              cpu: 0.01
-            limits:
-              memory: "2G"
-              cpu: 2
+              memory: 10M
+              cpu: 5m
           securityContext:
             allowPrivilegeEscalation: false
           volumeMounts:

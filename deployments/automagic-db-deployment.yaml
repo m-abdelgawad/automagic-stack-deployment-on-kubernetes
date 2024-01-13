@@ -57,11 +57,8 @@ spec:
             failureThreshold: 20
           resources:
             requests:
-              memory: "10M"
-              cpu: 0.01
-            limits:
-              memory: "2G"
-              cpu: 2
+              memory: 25M
+              cpu: 20m
           env:
             - name: IS_PRODUCTION
               value: "True"
