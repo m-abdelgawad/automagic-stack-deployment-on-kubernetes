@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: automagic-resource-quota
+spec:
+  hard:
+    requests.cpu: 4000m
+    requests.memory: 4000M
+    limits.cpu: 8000m
+    limits.memory: 8000M
