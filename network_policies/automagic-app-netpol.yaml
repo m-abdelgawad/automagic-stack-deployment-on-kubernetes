@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: automagic-app-netpol
+  namespace: automagic-developer
+spec:
+  podSelector:
+    matchLabels:
+      name: automagic-app-pod
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              name: automagic-nginx-pod
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+    - to:
+        - podSelector:
+            matchLabels:
+              name: automagic-db-pod
