@@ -41,7 +41,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: nginx
-          image: mabdelgawad94/automagic_developer:automagic-nginx-server
+          image: mabdelgawad94/nginx-for-automagic-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
