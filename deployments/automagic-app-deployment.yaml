@@ -9,7 +9,7 @@ metadata:
     service-type: application
     app: automagic-developer
 spec:
-  replicas: 2
+  replicas: 1
   strategy:  
    type: RollingUpdate
    rollingUpdate:
@@ -41,7 +41,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: app
-          image: mabdelgawad94/automagic_developer:app-f00335e
+          image: mabdelgawad94/automagic_developer:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
